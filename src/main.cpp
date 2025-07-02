@@ -46,8 +46,8 @@ void setup() {
   lsm6dsoxSensor.Set_X_ODR(6667.0f);
 
 
-  // Set Gyroscope sample rate to 208 Hz. Available values are +- 12.0, 26.0, 52.0, 104.0, 208.0, 416.0, 833.0, 1667.0, 3333.0, 6667.0 Hz
-  lsm6dsoxSensor.Set_G_ODR(208.0f);
+  // Set Gyroscope sample rate to 6667 Hz. Available values are +- 12.0, 26.0, 52.0, 104.0, 208.0, 416.0, 833.0, 1667.0, 3333.0, 6667.0 Hz
+  lsm6dsoxSensor.Set_G_ODR(6667.0f);
 
 
 }
@@ -83,14 +83,14 @@ if (gyroStatus == 1) { // Status == 1 means a new data is available
 int32_t rotation[3];
 lsm6dsoxSensor.Get_G_Axes(rotation);
 
-// Plot data for each axis in milli degrees per second
+// Plot data for each axis in degrees per second
 //Serial.print(">");
-Serial.print(", GX=");
-Serial.print(rotation[0]);
-Serial.print(", GY=");
-Serial.print(rotation[1]);
-Serial.print(", GZ=");
-Serial.print(rotation[2]);
+Serial.print(", GX:");
+Serial.print(rotation[0]/1000.0f); // Convert to degrees per second
+Serial.print(", GY:");
+Serial.print(rotation[1]/1000.0f); // Convert to degrees per second
+Serial.print(", GZ:");
+Serial.print(rotation[2]/1000.0f); // Convert to degrees per second
 Serial.println("");
 }
 
