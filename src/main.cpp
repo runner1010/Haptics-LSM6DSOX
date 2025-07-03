@@ -68,7 +68,7 @@ Serial.print(acceleration[0]/1000.0f); // Convert to g
 Serial.print(", AY:");
 Serial.print(acceleration[1]/1000.0f); // Convert to g
 Serial.print(", AZ:");
-Serial.print((acceleration[2]/1000.0f)+1); // Convert to g and add 1g offset to Z axis
+Serial.print((acceleration[2]/1000.0f)-1); // Convert to g and remove gravity offset to Z axis
 Serial.print(", Upper:");
 Serial.print(scaling[0]/1000.0f); // Convert to g
 Serial.print(", Lower:");
