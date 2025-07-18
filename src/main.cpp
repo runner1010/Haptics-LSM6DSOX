@@ -7,6 +7,9 @@ LSM6DSOXSensor lsm6dsoxSensor = LSM6DSOXSensor(&Wire, LSM6DSOX_I2C_ADD_L);
 
 int scaling[2] = {3000, -3000};
 
+float filtered_gx = 0, filtered_gy = 0, filtered_gz = 0;
+const float alpha = 0.1f; // Smoothing factor (0 < alpha < 1)
+
 void setup() {
   Serial.begin(115200);
   //Wire.begin();
@@ -58,7 +61,8 @@ int32_t acceleration[3];
 lsm6dsoxSensor.Get_X_Axes(acceleration);
 
 // Plot data for each axis in g
-Serial.print(">");
+Serial.print(">");  // Required to start data block for Serial Plotter
+
 Serial.print("AX:");
 Serial.print(acceleration[0]/1000.0f); // Convert to g
 Serial.print(", AY:");
@@ -69,7 +73,6 @@ Serial.print(", Upper:");
 Serial.print(scaling[0]/1000.0f); // Convert to g
 Serial.print(", Lower:");
 Serial.print(scaling[1]/1000.0f); // Convert to g
-//Serial.println("");
 }
 
 // Read gyroscope
@@ -80,14 +83,23 @@ int32_t rotation[3];
 lsm6dsoxSensor.Get_G_Axes(rotation);
 
 // Plot data for each axis in degrees per second
-//Serial.print(">");
+float gx = rotation[0] / 1000.0f;
+float gy = rotation[1] / 1000.0f;
+float gz = rotation[2] / 1000.0f;
+
+// Low-pass filter
+filtered_gx = alpha * gx + (1 - alpha) * filtered_gx;
+filtered_gy = alpha * gy + (1 - alpha) * filtered_gy;
+filtered_gz = alpha * gz + (1 - alpha) * filtered_gz;
+
 Serial.print(", GX:");
-Serial.print(rotation[0]/1000.0f); // Convert to degrees per second
+Serial.print(filtered_gx);
 Serial.print(", GY:");
-Serial.print(rotation[1]/1000.0f); // Convert to degrees per second
+Serial.print(filtered_gy);
 Serial.print(", GZ:");
-Serial.print(rotation[2]/1000.0f); // Convert to degrees per second
-Serial.println("");
+Serial.print(filtered_gz);
+
+Serial.println(); // Required to end serial data block for Serial Plotter
 }
 
 delay(10);
